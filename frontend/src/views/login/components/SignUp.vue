@@ -114,7 +114,7 @@ export default {
       })
     },
     handleSendVerifyCode () {
-      axios.get('http://127.0.0.1:8000/email/verify/lianshiliang@zonghenggroup.com.cn').then((response) => {
+      axios.get('http://127.0.0.1:8000/email/verify/').then((response) => {
         console.log(response.data)
       })
     }
