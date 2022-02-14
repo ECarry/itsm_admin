@@ -16,10 +16,10 @@
             <el-input v-model="ruleForm.email"></el-input>
           </el-form-item>
 
-          <el-form-item label="密码" prop="pass">
+          <el-form-item label="密码" prop="password">
             <el-input
               type="password"
-              v-model="ruleForm.pass"
+              v-model="ruleForm.password"
               autocomplete="off"
             ></el-input>
           </el-form-item>
@@ -77,7 +77,7 @@ export default {
     return {
       ruleForm: {
         email: '',
-        pass: '',
+        password: '',
         checkPass: '',
         verifyCode: ''
       },
@@ -90,7 +90,7 @@ export default {
             trigger: ['change']
           }
         ],
-        pass: [
+        password: [
           { validator: validatePass, trigger: 'blur' }
         ],
         checkPass: [
