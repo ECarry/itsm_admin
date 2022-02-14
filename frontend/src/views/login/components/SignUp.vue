@@ -35,7 +35,7 @@
           <el-form-item label="验证码" prop="verifyCode">
             <el-input
               v-model="ruleForm.verifyCode"
-            ></el-input><el-button>获取验证码</el-button>
+            ></el-input><el-button @click="handleSendVerifyCode">获取验证码</el-button>
           </el-form-item>
 
           <el-form-item>
@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'SignUp',
   data () {
@@ -109,6 +111,11 @@ export default {
           console.log('error submit!!')
           return false
         }
+      })
+    },
+    handleSendVerifyCode () {
+      axios.get('http://127.0.0.1:8000/email/verify/lianshiliang@zonghenggroup.com.cn').then((response) => {
+        console.log(response.data)
       })
     }
   }
