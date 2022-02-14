@@ -36,47 +36,47 @@
 </template>
 <script>
 export default {
-  name: "Login",
-  data() {
+  name: 'Login',
+  data () {
     return {
       ruleForm: {
-        email: "",
-        pass: "",
+        email: '',
+        pass: ''
       },
       rules: {
         email: [
-          { required: true, message: "请输入邮箱地址", trigger: "blur" },
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
           {
-            type: "email",
-            message: "请输入正确的邮箱地址",
-            trigger: ["change"],
-          },
+            type: 'email',
+            message: '请输入正确的邮箱地址',
+            trigger: ['change']
+          }
         ],
         pass: [
-          { required: true, message: "请输入密码", trigger: "blur" },
+          { required: true, message: '请输入密码', trigger: 'blur' },
           {
             min: 8,
             max: 32,
-            message: "长度大于 8 小于32个字符",
-            trigger: "blur",
-          },
-        ],
-      },
-    };
+            message: '长度大于 8 小于32个字符',
+            trigger: 'blur'
+          }
+        ]
+      }
+    }
   },
   methods: {
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$router.push('/')
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
-    },
-  },
-};
+      })
+    }
+  }
+}
 </script>
 <style>
 </style>
