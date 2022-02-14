@@ -150,6 +150,18 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# send email settings
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 25
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_SSL_KEYFILE = None
+EMAIL_TIMEOUT = None
+EMAIL_SSL_CERTFILE = None
+
+
 # kuaidi100
 KUAIDI100_KEY = ''
 KUAIDI100_CUSTOMER = ''
