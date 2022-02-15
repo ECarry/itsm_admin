@@ -57,7 +57,7 @@ export default {
     }
     return {
       ruleForm: {
-        username: '',
+        username: localStorage.username,
         password: ''
       },
       rules: {
@@ -88,6 +88,8 @@ export default {
             })
             .then((response) => {
               console.log(response.data)
+              // 将返回的数据写入浏览器中的 localstorage
+              localStorage.access = response.data.access
               // this.$router.push('/')
             })
             .catch((error) => {

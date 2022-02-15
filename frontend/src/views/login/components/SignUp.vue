@@ -164,6 +164,11 @@ export default {
               verifyCode: this.ruleForm.verifyCode
             })
             .then((response) => {
+              // 将返回的数据存到 localstorage
+              sessionStorage.clear()
+              localStorage.clear()
+              localStorage.id = response.data.id
+              localStorage.username = response.data.username
               this.$router.push('/login')
             })
             .catch((error) => {
