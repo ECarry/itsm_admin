@@ -56,13 +56,16 @@ export default {
   name: 'SignUp',
   data () {
     var validateUsername = (rule, value, callback) => {
-      if (value === '') {
+      if (!value) {
         callback(new Error('请输入用户名'))
-      } else {
-        axios.get('http://127.0.0.1:8000/user/verify/username/' + this.ruleForm.username, { responseType: 'json' })
+      } else if (value) {
+        axios.get('http://127.0.0.1:8000/user/verify/username/' + value, { responseType: 'json' })
           .then((response) => {
             if (response.data.count === 1) {
-              callback(new Error('用户名已存在！'))
+              callback(new Error('用户名已存在'))
+            } else {
+              console.log('validateUsername callback')
+              callback()
             }
           })
       }
@@ -71,30 +74,46 @@ export default {
     var validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'))
+      } else {
+        console.log('validatePass callback')
+        callback()
       }
     }
 
     var validatePass2 = (rule, value, callback) => {
-      if (value === '') {
+      if (!value) {
         callback(new Error('请再次输入密码'))
       } else if (value !== this.ruleForm.password) {
-        callback(new Error('两次输入密码不一致!'))
+        callback(new Error('两次输入密码不一致'))
+      } else {
+        console.log('validatePass2 callback')
+        callback()
       }
     }
     // 自定义邮箱验证邮箱是否注册
     var validateEmail = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入邮箱地址'))
-      } else {
+      if (value) {
         axios
-          .get('http://127.0.0.1:8000/user/verify/email/' + this.ruleForm.email, {
+          .get('http://127.0.0.1:8000/user/verify/email/' + value, {
             responseType: 'json'
           })
           .then((response) => {
             if (response.data.count === 1) {
-              callback(new Error('邮箱已存在！'))
+              callback(new Error('邮箱已存在'))
+            } else {
+              console.log('validateEmail callback')
+              callback()
             }
           })
+      }
+    }
+
+    var validateVerifyCode = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入验证码'))
+      } else {
+        console.log('validateVerifyCode callback')
+        callback()
       }
     }
 
@@ -120,39 +139,43 @@ export default {
           { validator: validateEmail, trigger: 'blur' }
         ],
         password: [
-          { required: true, validator: validatePass, trigger: 'blur' },
-          { min: 8, max: 32, message: '需大于8位小于32位', trigger: 'blur' }
+          { min: 8, max: 32, message: '密码长度需要大于8个小于32个字符', trigger: 'blur' },
+          { required: true, validator: validatePass, trigger: 'blur' }
         ],
         checkPass: [
           { required: true, validator: validatePass2, trigger: 'blur' }
         ],
         verifyCode: [
-          { required: true, message: '请输入验证码', trigger: 'blue' }
+          { required: true, validator: validateVerifyCode, trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
-    submitForm () {
-      axios
-        .post('http://127.0.0.1:8000/user/create/', {
-          username: this.ruleForm.username,
-          email: this.ruleForm.email,
-          password: this.ruleForm.password,
-          checkPass: this.ruleForm.checkPass,
-          verifyCode: this.ruleForm.verifyCode
-        })
-        .then((response) => {
-          console.log(response.data)
-          this.$router.push('/login')
-        })
-        .catch((error) => {
-          console.log(error.response.data)
-        })
+    submitForm (formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          axios
+            .post('http://127.0.0.1:8000/user/create/', {
+              username: this.ruleForm.username,
+              email: this.ruleForm.email,
+              password: this.ruleForm.password,
+              checkPass: this.ruleForm.checkPass,
+              verifyCode: this.ruleForm.verifyCode
+            })
+            .then((response) => {
+              this.$router.push('/login')
+            })
+            .catch((error) => {
+              console.log(error.response.data)
+            })
+        } else {
+          console.log(valid)
+        }
+      })
     },
     handleSendVerifyCode () {
       if (!this.ruleForm.email) {
-        console.log('请填写邮箱')
         return false
       }
       axios
