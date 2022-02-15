@@ -11,8 +11,8 @@
           label-width="100px"
           class="demo-ruleForm"
         >
-          <el-form-item label="企业邮箱" prop="email">
-            <el-input v-model="ruleForm.email"></el-input>
+          <el-form-item label="用户名" prop="username">
+            <el-input type="text" v-model="ruleForm.username"></el-input>
           </el-form-item>
 
           <el-form-item label="密码" prop="password">
@@ -29,6 +29,10 @@
               v-model="ruleForm.checkPass"
               autocomplete="off"
             ></el-input>
+          </el-form-item>
+
+          <el-form-item label="企业邮箱" prop="email">
+            <el-input v-model="ruleForm.email"></el-input>
           </el-form-item>
 
           <el-form-item label="验证码" prop="verifyCode">
@@ -53,6 +57,14 @@ import axios from "axios";
 export default {
   name: "SignUp",
   data() {
+    var validateUsername = (rule, value, callback) => {
+      axios.get("http://127.0.0.1:8000/user/verify/username/"+ this.ruleForm.username, {responseType: "json"})
+      .then((response) => {
+        if (response.data.count === 1){
+          callback(new Error("用户名已存在！"));
+        }
+      })
+    };
     var validatePass = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入密码"));
@@ -80,18 +92,23 @@ export default {
         })
         .then((response) => {
           if (response.data.count === 1) {
-            callback(new Error("邮箱已存在！"))
+            callback(new Error("邮箱已存在！"));
           }
         });
     };
     return {
       ruleForm: {
+        username: "",
         email: "",
         password: "",
         checkPass: "",
         verifyCode: "",
       },
       rules: {
+        username: [
+          {required: true, message: "请输入用户名", trigger: "blur"},
+          { validator: validateUsername, trigger: "blur"}
+        ],
         email: [
           { required: true, message: "请输入邮箱地址", trigger: "blur" },
           {
@@ -101,8 +118,12 @@ export default {
           },
           { validator: validateEmail, trigger: "blur" },
         ],
-        password: [{ validator: validatePass, trigger: "blur" }],
-        checkPass: [{ validator: validatePass2, trigger: "blur" }],
+        password: [
+          { required: true, validator: validatePass, trigger: "blur" },
+        ],
+        checkPass: [
+          { required: true, validator: validatePass2, trigger: "blur" },
+        ],
         verifyCode: [
           { required: true, message: "请输入验证码", trigger: "blue" },
         ],
@@ -111,10 +132,13 @@ export default {
   },
   methods: {
     submitForm(formName) {
+      console.log('click signup')
       this.$refs[formName].validate((valid) => {
+        console.log(valid)
         if (valid) {
           axios
             .post("http://127.0.0.1:8000/user/create/", {
+              username: this.ruleForm.username,
               email: this.ruleForm.email,
               password: this.ruleForm.password,
               checkPass: this.ruleForm.checkPass,
