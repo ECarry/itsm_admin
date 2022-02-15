@@ -19,7 +19,6 @@
             <el-input
               type="password"
               v-model="ruleForm.password"
-              autocomplete="off"
             ></el-input>
           </el-form-item>
 
@@ -27,7 +26,6 @@
             <el-input
               type="password"
               v-model="ruleForm.checkPass"
-              autocomplete="off"
             ></el-input>
           </el-form-item>
 
@@ -52,125 +50,121 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios'
 
 export default {
-  name: "SignUp",
-  data() {
+  name: 'SignUp',
+  data () {
     var validateUsername = (rule, value, callback) => {
-      axios.get("http://127.0.0.1:8000/user/verify/username/"+ this.ruleForm.username, {responseType: "json"})
-      .then((response) => {
-        if (response.data.count === 1){
-          callback(new Error("用户名已存在！"));
-        }
-      })
-    };
+      if (value === '') {
+        callback(new Error('请输入用户名'))
+      } else {
+        axios.get('http://127.0.0.1:8000/user/verify/username/' + this.ruleForm.username, { responseType: 'json' })
+          .then((response) => {
+            if (response.data.count === 1) {
+              callback(new Error('用户名已存在！'))
+            }
+          })
+      }
+    }
+
     var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
-      } else {
-        if (this.ruleForm.checkPass !== "") {
-          this.$refs.ruleForm.validateField("checkPass");
-        }
-        callback();
+      if (value === '') {
+        callback(new Error('请输入密码'))
       }
-    };
+    }
+
     var validatePass2 = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
       } else if (value !== this.ruleForm.password) {
-        callback(new Error("两次输入密码不一致!"));
-      } else {
-        callback();
+        callback(new Error('两次输入密码不一致!'))
       }
-    };
+    }
     // 自定义邮箱验证邮箱是否注册
     var validateEmail = (rule, value, callback) => {
-      axios
-        .get("http://127.0.0.1:8000/user/verify/email/" + this.ruleForm.email, {
-          responseType: "json",
-        })
-        .then((response) => {
-          if (response.data.count === 1) {
-            callback(new Error("邮箱已存在！"));
-          }
-        });
-    };
+      if (value === '') {
+        callback(new Error('请输入邮箱地址'))
+      } else {
+        axios
+          .get('http://127.0.0.1:8000/user/verify/email/' + this.ruleForm.email, {
+            responseType: 'json'
+          })
+          .then((response) => {
+            if (response.data.count === 1) {
+              callback(new Error('邮箱已存在！'))
+            }
+          })
+      }
+    }
+
     return {
       ruleForm: {
-        username: "",
-        email: "",
-        password: "",
-        checkPass: "",
-        verifyCode: "",
+        username: '',
+        email: '',
+        password: '',
+        checkPass: '',
+        verifyCode: ''
       },
       rules: {
         username: [
-          {required: true, message: "请输入用户名", trigger: "blur"},
-          { validator: validateUsername, trigger: "blur"}
+          { required: true, validator: validateUsername, trigger: 'blur' }
         ],
         email: [
-          { required: true, message: "请输入邮箱地址", trigger: "blur" },
           {
-            type: "email",
-            message: "请输入正确的邮箱地址",
-            trigger: ["change", "blur"],
+            required: true,
+            type: 'email',
+            message: '请输入正确的邮箱地址',
+            trigger: ['change', 'blur']
           },
-          { validator: validateEmail, trigger: "blur" },
+          { validator: validateEmail, trigger: 'blur' }
         ],
         password: [
-          { required: true, validator: validatePass, trigger: "blur" },
+          { required: true, validator: validatePass, trigger: 'blur' },
+          { min: 8, max: 32, message: '需大于8位小于32位', trigger: 'blur' }
         ],
         checkPass: [
-          { required: true, validator: validatePass2, trigger: "blur" },
+          { required: true, validator: validatePass2, trigger: 'blur' }
         ],
         verifyCode: [
-          { required: true, message: "请输入验证码", trigger: "blue" },
-        ],
-      },
-    };
+          { required: true, message: '请输入验证码', trigger: 'blue' }
+        ]
+      }
+    }
   },
   methods: {
-    submitForm(formName) {
-      console.log('click signup')
-      this.$refs[formName].validate((valid) => {
-        console.log(valid)
-        if (valid) {
-          axios
-            .post("http://127.0.0.1:8000/user/create/", {
-              username: this.ruleForm.username,
-              email: this.ruleForm.email,
-              password: this.ruleForm.password,
-              checkPass: this.ruleForm.checkPass,
-              verifyCode: this.ruleForm.verifyCode,
-            })
-            .then((response) => {
-              this.$router.push("/login");
-            })
-            .catch((error) => {
-              console.log(error.response.data);
-            });
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+    submitForm () {
+      axios
+        .post('http://127.0.0.1:8000/user/create/', {
+          username: this.ruleForm.username,
+          email: this.ruleForm.email,
+          password: this.ruleForm.password,
+          checkPass: this.ruleForm.checkPass,
+          verifyCode: this.ruleForm.verifyCode
+        })
+        .then((response) => {
+          console.log(response.data)
+          this.$router.push('/login')
+        })
+        .catch((error) => {
+          console.log(error.response.data)
+        })
     },
-    handleSendVerifyCode() {
+    handleSendVerifyCode () {
       if (!this.ruleForm.email) {
-        console.log("请填写邮箱");
-        return false;
+        console.log('请填写邮箱')
+        return false
       }
       axios
         .get(`http://127.0.0.1:8000/email/verify/${this.ruleForm.email}`, {
-          responseType: "json",
+          responseType: 'json'
         })
         .then((response) => {
-          console.log(response.data);
-        });
-    },
-  },
-};
+          console.log(response.data)
+        })
+    }
+  }
+}
 </script>
 
 <style scoped>

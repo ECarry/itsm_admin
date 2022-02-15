@@ -11,8 +11,8 @@
           label-width="100px"
           class="demo-ruleForm"
         >
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="ruleForm.email"></el-input>
+          <el-form-item label="用户名" prop="username">
+            <el-input v-model="ruleForm.username"></el-input>
           </el-form-item>
 
           <el-form-item label="密码" prop="password">
@@ -23,7 +23,7 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')"
+            <el-button type="primary" @click="submitForm"
               >登录</el-button
             >
           </el-form-item>
@@ -33,74 +33,65 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+import axios from 'axios'
 
 export default {
-  name: "Login",
-  data() {
-    var validateEmail = (rule, value, callback) => {
-      axios
-        .get("http://127.0.0.1:8000/user/verify/email/" + this.ruleForm.email, {
-          responseType: "json",
-        })
-        .then((response) => {
-          if (response.data.count === 0) {
-            callback(new Error("邮箱不存在！"));
-          }
-        });
-    };
+  name: 'Login',
+  data () {
+    var validateUsername = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入用户名'))
+      } else {
+        axios
+          .get('http://127.0.0.1:8000/user/verify/username/' + this.ruleForm.username, {
+            responseType: 'json'
+          })
+          .then((response) => {
+            if (response.data.count === 0) {
+              callback(new Error('用户名不存在！'))
+            }
+          })
+      }
+    }
     return {
       ruleForm: {
-        email: "",
-        password: "",
+        username: '',
+        password: ''
       },
       rules: {
-        email: [
-          { required: true, message: "请输入邮箱地址", trigger: "blur" },
-          {
-            type: "email",
-            message: "请输入正确的邮箱地址",
-            trigger: ["change", "blur"],
-          },
-          { validator: validateEmail, trigger: "blur" },
+        username: [
+          { required: true, validator: validateUsername, trigger: 'blur' }
         ],
         password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
+          { required: true, message: '请输入密码', trigger: 'blur' },
           {
             min: 8,
             max: 32,
-            message: "长度大于 8 小于32个字符",
-            trigger: "blur",
-          },
-        ],
-      },
-    };
+            message: '长度大于 8 小于32个字符',
+            trigger: 'blur'
+          }
+        ]
+      }
+    }
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          // 登录
-          axios
-            .post("login", {
-              email: this.ruleForm.email,
-              password: this.ruleForm.password,
-            })
-            .then((response) => {
-              console.log(response.data);
-              this.$router.push("/");
-            })
-            .catch((error) => {
-              console.log(error.response.data);
-            });
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-  },
-};
+    submitForm () {
+      // 登录
+      axios
+        .post('http://127.0.0.1:8000/user/login/', {
+          username: this.ruleForm.username,
+          password: this.ruleForm.password
+        })
+        .then((response) => {
+          console.log(response.data)
+          // this.$router.push('/')
+        })
+        .catch((error) => {
+          console.log(error.response.data)
+        })
+    }
+  }
+}
 </script>
 <style>
 </style>
