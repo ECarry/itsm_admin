@@ -13,7 +13,7 @@ class CreateUserSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'password', 'checkPass', 'code']
+        fields = ['id', 'email', 'password', 'checkPass', 'verifyCode']
         # 修改默认字段
         extra_kwargs = {
             'username': {
