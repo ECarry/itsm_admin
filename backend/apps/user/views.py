@@ -20,3 +20,16 @@ class VerifyEmailCount(APIView):
             'count': count
         }
         return Response(data)
+
+
+# 验证注册用户名是否存在
+class VerifyUsernameCount(APIView):
+    def get(self, request, username):
+        count = User.objects.filter(username=username).count()
+
+        data = {
+            'username': username,
+            'count': count
+        }
+
+        return Response(data)
