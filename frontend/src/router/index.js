@@ -38,6 +38,11 @@ const routes = [
         path: '/spare',
         name: 'Spare',
         component: () => import('../views/spare/spares/index.vue')
+      },
+      {
+        path: '/user',
+        name: 'User',
+        component: () => import('../views/user/index.vue')
       }
     ]
   }
