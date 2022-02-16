@@ -5,7 +5,7 @@ from .serializers import AreaSerializers, AreaDetailSerializers
 
 
 # 所有省份列表试图
-class ProvinceListView(APIView):
+class AreaListView(APIView):
     def get(self, request):
         # 查询全省
         province = Area.objects.filter(parent=None)
@@ -17,17 +17,17 @@ class ProvinceListView(APIView):
         return Response(serializer.data)
 
 
-# 省份所有下级市
-class ProvinceDetailListView(APIView):
+# 省所有下级市
+# 市下所有区县
+class AreaDetailListView(APIView):
     def get(self, request, pk):
-        # 某省下的市
         try:
-            province_detail = Area.objects.get(id=pk)
+            area_detail = Area.objects.get(id=pk)
         except Area.DoesNotExist:
-            return Response({'message': '查无省份'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': '查无此地区'}, status=status.HTTP_400_BAD_REQUEST)
 
         # 序列化器
-        serializer = AreaDetailSerializers(province_detail)
+        serializer = AreaDetailSerializers(area_detail)
 
         # 返回数据
         return Response(serializer.data)
