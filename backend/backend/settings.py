@@ -65,6 +65,10 @@ MIDDLEWARE = [
 # 便于传输，JWT 构成简单，字节占用小
 # playload 部分可以存储其他业务逻辑所必要的非敏感信息
 REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ),
+    # 认证配置
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )

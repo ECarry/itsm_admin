@@ -1,8 +1,10 @@
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework import status
 from rest_framework.views import APIView, Response
-from .serializers import CreateUserSerializers
+from .serializers import CreateUserSerializers, MyTokenObtainPairSerializer, UserDetailSerializers
 from .models import User
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework import permissions
 
 
 # 注册视图
@@ -33,3 +35,21 @@ class VerifyUsernameCount(APIView):
         }
 
         return Response(data)
+
+
+# 自定义令牌
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+
+# 个人信息详情
+class UserDetailView(RetrieveAPIView):
+    serializer_class = UserDetailSerializers
+
+    # 设置需要认证才能获取信息
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        return self.request.user
+
+

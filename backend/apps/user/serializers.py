@@ -1,8 +1,11 @@
 from rest_framework import serializers
 from django_redis import get_redis_connection
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from .models import User
 
 
+# 创建用户序列化器
 class CreateUserSerializers(serializers.ModelSerializer):
     # 所有字段 ['id', 'username', 'name', 'email', 'mobile', 'password', 'checkPass', 'code']
     # 已存在字段 ['id', 'username', 'name', 'email', 'mobile', 'password']
@@ -63,3 +66,30 @@ class CreateUserSerializers(serializers.ModelSerializer):
 
         return user
 
+
+# 用户详情序列化器
+class UserDetailSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'name', 'email', 'mobile']
+
+
+# 自定义 TokenObtainPairView 类
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    # @classmethod
+    # def get_token(cls, user):
+    #     token = super().get_token(user)
+    #
+    #     token['username'] = user.username
+    #     print(token)
+    #     return token
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        refresh = self.get_token(self.user)
+
+        data['refresh'] = str(refresh)
+        data['access'] = str(refresh.access_token)
+        data['username'] = self.user.username
+
+        return data
