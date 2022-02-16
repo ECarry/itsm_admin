@@ -22,6 +22,8 @@
             ></el-input>
           </el-form-item>
 
+          <el-checkbox v-model="ruleForm.checked">记住我</el-checkbox>
+
           <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm')"
               >登录</el-button
@@ -58,7 +60,8 @@ export default {
     return {
       ruleForm: {
         username: localStorage.username,
-        password: ''
+        password: '',
+        checked: false
       },
       rules: {
         username: [
@@ -87,9 +90,17 @@ export default {
               password: this.ruleForm.password
             })
             .then((response) => {
-              console.log(response.data)
-              // 将返回的数据写入浏览器中的 localstorage
-              localStorage.access = response.data.access
+              if (this.ruleForm.checked) {
+                sessionStorage.clear()
+                // 记住我，将返回的数据写入浏览器中的 localstorage
+                localStorage.access = response.data.access
+                localStorage.username = response.data.username
+              } else {
+                // 没记住，则写入 sessionStorage
+                localStorage.clear()
+                sessionStorage.access = response.data.access
+                sessionStorage.usernmae = response.data.username
+              }
               // this.$router.push('/')
             })
             .catch((error) => {
@@ -104,4 +115,20 @@ export default {
 }
 </script>
 <style>
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.form-input {
+  margin: 10px  20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.demo-ruleForm {
+  margin: 5px;
+  justify-content: center;
+  align-items: center;
+}
 </style>
