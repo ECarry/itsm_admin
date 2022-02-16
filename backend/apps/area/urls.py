@@ -1,7 +1,10 @@
 from django.urls import path
+from rest_framework.routers import DefaultRouter
 from . import views
 
-urlpatterns = [
-    path('province/', views.AreaListView.as_view()),
-    path('province/<pk>', views.AreaDetailListView.as_view())
-]
+urlpatterns = []
+
+router = DefaultRouter()
+router.register('area', views.AreaViewSet, basename='area')
+urlpatterns += router.urls
+
