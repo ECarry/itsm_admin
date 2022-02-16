@@ -95,13 +95,16 @@ export default {
                 // 记住我，将返回的数据写入浏览器中的 localstorage
                 localStorage.access = response.data.access
                 localStorage.username = response.data.username
+                sessionStorage.access = response.data.access
+                sessionStorage.usernmae = response.data.username
+                this.$router.push('/user')
               } else {
                 // 没记住，则写入 sessionStorage
                 localStorage.clear()
                 sessionStorage.access = response.data.access
                 sessionStorage.usernmae = response.data.username
+                this.$router.push('/user')
               }
-              // this.$router.push('/')
             })
             .catch((error) => {
               console.log(error.response.data)

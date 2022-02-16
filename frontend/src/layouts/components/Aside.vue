@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="aside-container">
     <el-menu
       default-active="1-4-1"
       class="el-menu-vertical-demo"
@@ -19,7 +19,7 @@
         <span slot="title">DashBoard</span>
       </el-menu-item>
 
-      <el-submenu>
+      <el-submenu index="contract">
         <template slot="title">
           <i class="el-icon-shopping-cart-full"></i>
           <span slot="title">合同管理</span>
@@ -28,7 +28,7 @@
         <el-menu-item index="/server">维保设备</el-menu-item>
       </el-submenu>
 
-      <el-submenu>
+      <el-submenu index="product">
         <template slot="title">
           <i class="el-icon-cpu"></i>
           <span slot="title">备件管理</span>
@@ -37,36 +37,45 @@
         <el-menu-item index="/spare">所有备件</el-menu-item>
       </el-submenu>
 
-      <el-submenu>
+      <el-submenu index="user">
         <template slot="title">
           <i class="el-icon-s-custom"></i>
           <span slot="title">个人中心</span>
         </template>
-        <el-menu-item>我的信息</el-menu-item>
+        <el-menu-item index="/user">我的信息</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
 </template>
 <script>
 export default {
-  name: "Aside",
-  data() {
+  name: 'Aside',
+  data () {
     return {
-      isCollapse: false,
-    };
+      isCollapse: false
+    }
   },
   methods: {
-    handleCollapse() {
-      console.log("click");
-      this.isCollapse = !this.isCollapse;
-    },
-  },
-};
+    handleCollapse () {
+      console.log('click')
+      this.isCollapse = !this.isCollapse
+    }
+  }
+}
 </script>
 <style>
+.aside-container {
+  display: flex;
+  align-items: center;
+}
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
-  min-height: 400px;
+  height: 100%;
+}
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .logo-container .logo {
   display: flex;

@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-aside width="200px">
+    <el-aside width="210px">
         <Aside/>
     </el-aside>
     <el-container>
@@ -19,13 +19,13 @@ import Header from './components/Header.vue'
 import Main from './components/Main.vue'
 
 export default {
-    name: 'Home',
-    components: {
-        Aside,
-        Header,
-        Main
-    }
-};
+  name: 'Home',
+  components: {
+    Aside,
+    Header,
+    Main
+  }
+}
 </script>
-<style lang="">
+<style>
 </style>
