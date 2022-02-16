@@ -12,11 +12,7 @@ class VerifyEmail(APIView):
         match = re.match(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$', email)
 
         if not match:
-            data = {
-                'message': '请输入正确邮箱',
-                'status': status.HTTP_400_BAD_REQUEST
-            }
-            return Response(data)
+            return Response({'message': '请输入正确邮箱'}, status=status.HTTP_400_BAD_REQUEST)
 
         # 创建6位验证码
         code = '%06d' % randint(0, 999999)
@@ -29,11 +25,7 @@ class VerifyEmail(APIView):
 
         # 判断验证码是否 60s 内发送过
         if conn.get('send_flag_%s' % email):
-            data = {
-                'message': '验证码发送频繁',
-                'status': status.HTTP_400_BAD_REQUEST
-            }
-            return Response(data)
+            return Response({'message': '验证码发送频繁'}, status=status.HTTP_400_BAD_REQUEST)
 
         # 将 邮箱信息及验证码信息存储到 redis。 key timeout value
         pl.setex('email_%s' % email, 300, code)
@@ -48,6 +40,4 @@ class VerifyEmail(APIView):
             recipient_list=[email]
         )
 
-        return Response({'message': '发送成功',
-                         'status': status.HTTP_200_OK
-                         })
+        return Response({'message': '发送成功'}, status=status.HTTP_200_OK)
