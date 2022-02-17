@@ -6,7 +6,6 @@
     <el-descriptions-item label="手机号">{{ userInfo.mobile }}</el-descriptions-item>
     <el-descriptions-item label="邮箱">{{ userInfo.email }}</el-descriptions-item>
   </el-descriptions>
-    <button @click="getUserDetail">获取信息</button>
   </div>
 </template>
 <script>
@@ -34,6 +33,9 @@ export default {
         this.userInfo = { ...response.data }
       })
     }
+  },
+  mounted () {
+    this.getUserDetail()
   }
 }
 </script>
