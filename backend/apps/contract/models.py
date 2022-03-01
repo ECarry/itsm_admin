@@ -12,6 +12,3 @@ class Contract(models.Model):
     end_date = models.DateField(verbose_name="结束日期")
     tele_contract_num = models.CharField(max_length=32, blank=True, verbose_name="电信合同编码")
     total_sum = models.FloatField(verbose_name="总金额")
-
-    def __str__(self):
-        pass
