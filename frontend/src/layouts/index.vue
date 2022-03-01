@@ -1,17 +1,18 @@
 <template>
-  <el-container>
-    <el-aside width="210px">
-        <Aside/>
-    </el-aside>
-    <el-container>
-      <el-header>
-          <Header/>
-      </el-header>
-      <el-main>
-          <Main/>
-      </el-main>
-    </el-container>
-  </el-container>
+  <div class="container">
+    <!-- SIDEBAR -->
+    <section id="sidebar" :class="{hide:isHide}">
+      <Aside/>
+    </section>
+    <!-- SIDEBAR -->
+
+    <!--    CONTENT-->
+    <section id="content">
+      <Header :isHide="isHide" @changHide="changeHide" class="header"/>
+      <Main/>
+    </section>
+    <!--    CONTENT-->
+  </div>
 </template>
 <script>
 import Aside from './components/Aside.vue'
@@ -20,12 +21,23 @@ import Main from './components/Main.vue'
 
 export default {
   name: 'Home',
+  data () {
+    return {
+      isHide: false
+    }
+  },
   components: {
     Aside,
     Header,
     Main
+  },
+  methods: {
+    changeHide () {
+      this.isHide = !this.isHide
+    }
   }
 }
 </script>
 <style>
+
 </style>

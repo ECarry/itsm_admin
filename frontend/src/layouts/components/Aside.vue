@@ -1,103 +1,97 @@
 <template>
-  <div class="aside-container">
-    <el-menu
-      default-active="1-4-1"
-      class="el-menu-vertical-demo"
-      :collapse="isCollapse"
-      router
-    >
-      <div class="logo-container">
-        <div class="logo">
-          <i class="el-icon-eleme"></i>
-          <div class="logo-name">ITSM</div>
-        </div>
-        <i id="btn" class="el-icon-s-unfold" @click="handleCollapse"></i>
-      </div>
-
-      <el-menu-item index="/">
-        <i class="el-icon-menu"></i>
-        <span slot="title">DashBoard</span>
-      </el-menu-item>
-
-      <el-submenu index="contract">
-        <template slot="title">
-          <i class="el-icon-shopping-cart-full"></i>
-          <span slot="title">合同管理</span>
-        </template>
-        <el-menu-item index="/contract">所有合同</el-menu-item>
-        <el-menu-item index="/server">维保设备</el-menu-item>
-      </el-submenu>
-
-      <el-submenu index="product">
-        <template slot="title">
-          <i class="el-icon-cpu"></i>
-          <span slot="title">备件管理</span>
-        </template>
-        <el-menu-item index="/product">型号管理</el-menu-item>
-        <el-menu-item index="/spare">所有备件</el-menu-item>
-      </el-submenu>
-
-      <el-submenu index="user">
-        <template slot="title">
-          <i class="el-icon-s-custom"></i>
-          <span slot="title">个人中心</span>
-        </template>
-        <el-menu-item index="/user">我的信息</el-menu-item>
-      </el-submenu>
-    </el-menu>
-  </div>
+ <div>
+   <!--   LOGO  -->
+   <div class="logo">
+     <a href="#">
+       <i class="el-icon-sunset"></i>
+       <span class="text">ECarry</span>
+     </a>
+   </div>
+   <div class="menu">
+     <!--   TOP MENU-->
+     <ul class="menu top">
+       <li @click="changeActive(1)" :class="{ active: isActive === 1 }">
+         <router-link to="/">
+           <a href="#">
+             <i class="el-icon-menu"></i>
+             <span>Dashboard</span>
+           </a>
+         </router-link>
+       </li>
+       <li @click="changeActive(2)" :class="{ active: isActive === 2 }">
+         <a href="#">
+           <i class="el-icon-goods"></i>
+           <span>采购管理</span>
+         </a>
+       </li>
+       <li @click="changeActive(3)" :class="{ active: isActive === 3 }">
+         <router-link to="/contract">
+           <a href="#">
+             <i class="el-icon-s-order"></i>
+             <span>项目管理</span>
+           </a>
+         </router-link>
+       </li>
+       <li @click="changeActive(4)" :class="{ active: isActive === 4 }">
+         <router-link to="/server">
+           <a href="#">
+             <i class="el-icon-s-platform"></i>
+             <span>设备管理</span>
+           </a>
+         </router-link>
+       </li>
+       <li @click="changeActive(5)" :class="{ active: isActive === 5 }">
+         <router-link to="/spare">
+           <a href="#">
+             <i class="el-icon-cpu"></i>
+             <span>备件管理</span>
+           </a>
+         </router-link>
+       </li>
+       <li @click="changeActive(6)" :class="{ active: isActive === 6 }">
+         <router-link to="/user">
+           <a href="#">
+             <i class="el-icon-s-custom"></i>
+             <span>个人中心</span>
+           </a>
+         </router-link>
+       </li>
+     </ul>
+     <!--    BOTTOM MENU-->
+     <ul class="menu">
+       <li>
+         <a href="#">
+           <i class="el-icon-setting"></i>
+           <span>设置中心</span>
+         </a>
+       </li>
+       <li>
+         <router-link to="/login">
+           <a href="#" class="logout">
+             <i class="el-icon-switch-button"></i>
+             <span>退出登录</span>
+           </a>
+         </router-link>
+       </li>
+     </ul>
+   </div>
+ </div>
 </template>
 <script>
 export default {
   name: 'Aside',
   data () {
     return {
-      isCollapse: false
+      isActive: 1
     }
   },
   methods: {
-    handleCollapse () {
-      console.log('click')
-      this.isCollapse = !this.isCollapse
+    changeActive (i) {
+      this.isActive = i
     }
   }
 }
 </script>
 <style>
-.aside-container {
-  display: flex;
-  align-items: center;
-}
-.el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 200px;
-  height: 100%;
-}
-.logo-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.logo-container .logo {
-  display: flex;
-  height: 50px;
-  width: 100%;
-  align-items: center;
-}
 
-.logo-container .logo i {
-  font-size: 28px;
-  margin-right: 5px;
-}
-
-.logo-container .logo .logo-name {
-  font-size: 20px;
-}
-
-.logo-container #btn {
-  position: absolute;
-  top: 6px;
-  font-size: 20px;
-  text-align: center;
-  left: 150px;
-}
 </style>
