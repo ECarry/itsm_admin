@@ -1,7 +1,25 @@
 <template>
   <div>
     <div class="search">
-      <el-button type="primary" round>新建项目</el-button>
+      <el-button type="primary" round @click="dialogFormVisible = true">新建项目</el-button>
+      <!--      新建项目表单-->
+      <el-dialog title="新建项目" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+          <el-form-item label="活动名称" :label-width="formLabelWidth">
+            <el-input v-model="form.name" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="活动区域" :label-width="formLabelWidth">
+            <el-select v-model="form.region" placeholder="请选择活动区域">
+              <el-option label="区域一" value="shanghai"></el-option>
+              <el-option label="区域二" value="beijing"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        </div>
+      </el-dialog>
       <form action="#">
         <div class="form-input">
           <input type="search" placeholder="Search...">
@@ -23,45 +41,83 @@
           width="50">
         </el-table-column>
         <el-table-column
-          prop="name"
-          label="姓名"
-          width="180">
+          prop="contract_num"
+          label="合同编号">
         </el-table-column>
         <el-table-column
-          prop="address"
-          label="地址">
+          prop="contract_date"
+          label="签订时间">
         </el-table-column>
         <el-table-column
-          prop="status"
-          label="状态">
+          prop="project_num"
+          label="项目编号">
+        </el-table-column>
+        <el-table-column
+          prop="start_date"
+          label="开工时间">
+        </el-table-column>
+        <el-table-column
+          prop="area"
+          label="区域">
+        </el-table-column>
+        <el-table-column
+          prop="contract_name"
+          label="合同名称">
+        </el-table-column>
+        <el-table-column
+          prop="custom"
+          label="客户">
+        </el-table-column>
+        <el-table-column
+          prop="end_date"
+          label="完工时间">
+        </el-table-column>
+        <el-table-column
+          prop="tele_contract_num"
+          label="电信合同编号">
+        </el-table-column>
+        <el-table-column
+          prop="total_sum"
+          label="总金额">
         </el-table-column>
       </el-table>
     </div>
   </div>
 </template>
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Contract',
   data () {
     return {
-      tableData: [{
-        id: '1',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        id: '2',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        id: '3',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        id: '4',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }]
+      tableData: '',
+      dialogFormVisible: false,
+      form: {
+        contract_num: '',
+        contract_date: '',
+        project_num: '',
+        start_date: '',
+        area: '',
+        contract_name: '',
+        custom: '',
+        end_date: '',
+        tele_contract_num: '',
+        total_sum: ''
+      },
+      formLabelWidth: '200px'
     }
+  },
+  methods: {
+    // 获取数据
+    getData () {
+      axios.get('http://127.0.0.1:8000/contract/').then((response) => {
+        this.tableData = response.data
+      })
+    }
+  },
+  mounted () {
+    this.getData()
   }
 }
 </script>
