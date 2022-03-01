@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     # apps
     'user',
     'area',
-    'verify_email'
+    'verify_email',
+    'contract'
 ]
 
 MIDDLEWARE = [
