@@ -5,9 +5,9 @@
       <!--      新建项目表单-->
       <el-button type="primary" round @click="dialogFormVisible = true">新建项目</el-button>
       <el-dialog title="新建项目"
+                 width="600px"
                  :visible.sync="dialogFormVisible"
-                 :before-close="handleClose"
-      >
+                 :before-close="handleClose">
         <el-form :model="form" :rules="rules" ref="form">
           <el-form-item label="合同编号" :label-width="formLabelWidth" prop="contract_num">
             <el-input v-model="form.contract_num" autocomplete="off"></el-input>
@@ -59,8 +59,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="postData('form')">确 定</el-button>
+          <el-button round @click="dialogFormVisible = false">取 消</el-button>
+          <el-button round type="primary" @click="postData('form')">确 定</el-button>
         </div>
       </el-dialog>
       <!--      搜索框-->
@@ -72,7 +72,7 @@
       </form>
     </div>
     <!--    表格数据-->
-    <div class="table">
+    <div class="table" style="border-radius: 20px">
       <el-table
         v-loading="dataLoading"
         :data="tableData"
