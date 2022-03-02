@@ -1,9 +1,9 @@
 <p align="center">
   <a href="https://github.com/vuejs/vue-next">
-    <img src="https://img.shields.io/badge/vue-3.1.5-green.svg" alt="vue">
+    <img src="https://img.shields.io/badge/vue-2.6.11-green.svg" alt="vue">
   </a>
   <a href="https://github.com/ElemeFE/element">
-    <img src="https://img.shields.io/badge/TDesign-0.7.0-brightgreen.svg" alt="TDesign">
+    <img src="https://img.shields.io/badge/element-ui-2.15.6-brightgreen.svg" alt="element-ui">
   </a>
   <a href="https://www.djangoproject.com">
     <img src="https://img.shields.io/badge/Django-3.2.8-%230C4B33.svg" alt="Django">
