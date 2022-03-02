@@ -8,7 +8,7 @@
                  :visible.sync="dialogFormVisible"
                  :before-close="handleClose"
       >
-        <el-form :model="form" :rules="rules">
+        <el-form :model="form" :rules="rules" ref="form">
           <el-form-item label="合同编号" :label-width="formLabelWidth" prop="contract_num">
             <el-input v-model="form.contract_num" autocomplete="off"></el-input>
           </el-form-item>
@@ -60,7 +60,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="postData">确 定</el-button>
+          <el-button type="primary" @click="postData('form')">确 定</el-button>
         </div>
       </el-dialog>
       <!--      搜索框-->
@@ -281,22 +281,31 @@ export default {
         .catch(_ => {})
     },
     // 发送数据
-    postData () {
-      this.$request
-        .post('/contract/create/', {
-          ...this.form
-        })
-        .then((res) => {
-          this.dialogFormVisible = false
-          this.$message({
-            type: 'success',
-            message: '创建成功!'
-          })
-          this.tableData.push(res.data)
-        })
-        .catch((e) => {
-          console.log(e)
-        })
+    postData (formName) {
+      // 发送前校验数据
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          console.log('success submit form')
+          this.$request
+            .post('/contract/create/', {
+              ...this.form
+            })
+            .then((res) => {
+              this.dialogFormVisible = false
+              this.$message({
+                type: 'success',
+                message: '创建成功!'
+              })
+              this.tableData.push(res.data)
+            })
+            .catch((e) => {
+              console.log(e)
+            })
+        } else {
+          console.log('error submit')
+          return false
+        }
+      })
     }
   },
   mounted () {
