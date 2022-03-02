@@ -15,4 +15,4 @@
 
 # 简介
 
-itsm-admin 是一个 ITSM 后台管理系统，前端基于 [vue3](https://v3.cn.vuejs.org/) 和 [Element](https://element.eleme.cn/) 实现。
+itsm-admin 是一个 ITSM 后台管理系统，前端基于 [vue2](https://v3.cn.vuejs.org/) 和 [Element](https://element.eleme.cn/) 实现。
