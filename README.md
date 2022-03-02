@@ -3,7 +3,7 @@
     <img src="https://img.shields.io/badge/vue-2.6.11-green.svg" alt="vue">
   </a>
   <a href="https://github.com/ElemeFE/element">
-    <img src="https://img.shields.io/badge/elementui-2.15.6-brightgreen.svg" alt="element-ui">
+    <img src="https://img.shields.io/badge/Elementui-2.15.6-brightgreen.svg" alt="element-ui">
   </a>
   <a href="https://www.djangoproject.com">
     <img src="https://img.shields.io/badge/Django-3.2.8-%230C4B33.svg" alt="Django">
@@ -15,4 +15,4 @@
 
 # 简介
 
-itsm-admin 是一个 ITSM 后台管理系统，前端基于 [vue3](https://v3.cn.vuejs.org/) 和 [TDesign](https://tdesign.tencent.com/) 实现。
+itsm-admin 是一个 ITSM 后台管理系统，前端基于 [vue3](https://v3.cn.vuejs.org/) 和 [Element](https://element.eleme.cn/) 实现。
