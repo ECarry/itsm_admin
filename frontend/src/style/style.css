@@ -225,6 +225,7 @@ body {
   flex-direction: column;
   grid-gap: 16px;
   flex-wrap: wrap;
+  margin-bottom: 30px;
 }
 
 #content .main .head-title h1 {

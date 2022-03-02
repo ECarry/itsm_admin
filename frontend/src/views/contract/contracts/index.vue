@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Breadcrumb :title="title"/>
     <div class="search">
       <!--      新建项目表单-->
       <el-button type="primary" round @click="dialogFormVisible = true">新建项目</el-button>
@@ -62,15 +63,18 @@
           <el-button type="primary" @click="postData">确 定</el-button>
         </div>
       </el-dialog>
-      <form action="#">
+      <!--      搜索框-->
+      <form>
         <div class="form-input">
-          <input type="search" placeholder="Search...">
-          <button type="submit" class="search-btn"><i class='el-icon-search' ></i></button>
+          <input type="search" v-model="searchData" placeholder="请输入区域 项目编号 客户名称查询...">
+          <button @click="handleSearch" type="submit" class="search-btn"><i class='el-icon-search' ></i></button>
         </div>
       </form>
     </div>
+    <!--    表格数据-->
     <div class="table">
       <el-table
+        v-loading="dataLoading"
         :data="tableData"
         :cell-style="{background: 'var(--light)'}"
         :header-cell-style="{background: 'var(--blue)', color: 'var(--light)'}"
@@ -121,19 +125,39 @@
           prop="total_sum"
           label="总金额">
         </el-table-column>
+        <el-table-column label="操作"
+                         width="150">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+
+          </template>
+        </el-table-column>
       </el-table>
     </div>
+    <!--    页码-->
+    <Pagination :total="pagination.total" :pageSize="pagination.pageSize"/>
   </div>
 </template>
 <script>
-import axios from 'axios'
+import Pagination from '@/components/Pagination'
+import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
   name: 'Contract',
   data () {
     return {
+      title: '项目管理',
+      searchData: '',
       tableData: [],
       dialogFormVisible: false,
+      dataLoading: false,
       form: {
         contract_num: '',
         contract_date: '',
@@ -147,6 +171,9 @@ export default {
         total_sum: ''
       },
       formLabelWidth: '120px',
+      pagination: {
+        total: 0
+      },
       rules: {
         contract_num: [
           { required: true, message: '请输入合同编号', trigger: 'blur' }
@@ -181,7 +208,71 @@ export default {
       }
     }
   },
+  components: {
+    Pagination,
+    Breadcrumb
+  },
   methods: {
+    // 搜索
+    handleSearch () {
+      this.$request
+        .get('/contract/' + this.searchData)
+        .then((res) => {
+          console.log(res)
+          this.tableData = res.data
+          this.$message({
+            type: 'success',
+            message: '共找到' + res.data.length + '数据'
+          })
+          this.searchData = ''
+        })
+        .catch((e) => {
+          console.log(e)
+          this.$message({
+            type: 'warning',
+            message: '未找到数据'
+          })
+          this.searchData = ''
+        })
+    },
+    // 编辑
+    handleEdit (index, row) {
+      console.log(index, row.id)
+      this.$request
+        .get('/contract/' + row.id)
+        .then((res) => {
+          console.log(res)
+          console.log('success', this.tableData)
+        })
+        .catch((e) => {
+          console.log('fail', e)
+        })
+    },
+    // 删除数据
+    handleDelete (index, row) {
+      this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.tableData.splice(index, 1)
+        this.pagination.total = this.tableData.length
+        this.$request
+          .delete('/contract/' + row.id)
+          .then((res) => {
+            console.log(res.data)
+          })
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
     handleClose (done) {
       this.$confirm('确认关闭？')
         .then(_ => {
@@ -189,23 +280,40 @@ export default {
         })
         .catch(_ => {})
     },
-    // 获取数据
-    getData () {
-      axios.get('http://127.0.0.1:8000/contract/').then((response) => {
-        this.tableData = response.data
-      })
-    },
     // 发送数据
     postData () {
-      console.log({ ...this.form })
-      axios
-        .post('http://127.0.0.1:8000/contract/create/', {
+      this.$request
+        .post('/contract/create/', {
           ...this.form
+        })
+        .then((res) => {
+          this.dialogFormVisible = false
+          this.$message({
+            type: 'success',
+            message: '创建成功!'
+          })
+          this.tableData.push(res.data)
+        })
+        .catch((e) => {
+          console.log(e)
         })
     }
   },
   mounted () {
-    this.getData()
+    // 获取数据
+    this.dataLoading = true
+    this.$request
+      .get('/contract')
+      .then((res) => {
+        this.tableData = res.data
+        this.pagination.total = res.data.length
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+      .finally(() => {
+        this.dataLoading = false
+      })
   }
 }
 </script>
@@ -218,7 +326,7 @@ export default {
 
 .search form {
   margin-left: 10px;
-  max-width: 300px;
+  max-width: 500px;
   width: 100%;
   margin-right: auto;
 }

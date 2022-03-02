@@ -82,7 +82,7 @@ export default {
   name: 'Aside',
   data () {
     return {
-      isActive: 1
+      isActive: ''
     }
   },
   methods: {
