@@ -1,23 +1,30 @@
 from django.http import Http404
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView, Response
 from rest_framework.generics import CreateAPIView
-from rest_framework import status
+from rest_framework import status, generics
 from .serializers import ContractSerializers
 from .models import Contract
 from django.db.models import Q
+import time
+
+# # 分页器
+# class StandardResultsSetPagination(PageNumberPagination):
+#     page_size = 10
+#     page_size_query_param = 'page_size'
+#     max_page_size = 1000
 
 
 # 合同列表
-class ContractList(APIView):
-    def get(self, request):
-        # 所有合同
-        contracts = Contract.objects.all()
+class ContractList(generics.ListAPIView):
+    # 所有合同
+    queryset = Contract.objects.all()
 
-        # 序列化
-        serializer = ContractSerializers(contracts, many=True)
+    # 序列化
+    serializer_class = ContractSerializers
 
-        # 返回数据
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    # # 分页器
+    # pagination_class = StandardResultsSetPagination
 
 
 # 创建合同
