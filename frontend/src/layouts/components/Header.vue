@@ -6,11 +6,25 @@
       </div>
       <div class="right-content">
       <el-switch v-model="isDark"></el-switch>
-      <a href="#" class="notification">
-        <el-badge :value="messages" class="item">
-          <i class="el-icon-message-solid"></i>
-        </el-badge>
-      </a>
+      <!--        消息弹窗-->
+      <el-popover
+        placement="bottom-end"
+        title="通知"
+        width="500"
+        trigger="click"
+        >
+        <el-button slot="reference" style="border: none; background: none">
+          <a href="#" class="notification">
+            <el-badge :value="messages" class="item">
+              <i class="el-icon-message-solid"></i>
+            </el-badge>
+          </a>
+        </el-button>
+        <div class="header-message">
+          <img src="@/assets/nothing.png" alt="">
+          <span>暂无消息</span>
+        </div>
+      </el-popover>
       <a href="#" class="profile">
         <img src="../../assets/people.jpg" alt="">
       </a>
@@ -36,5 +50,4 @@ export default {
 }
 </script>
 <style>
-
 </style>

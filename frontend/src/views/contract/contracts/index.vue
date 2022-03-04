@@ -1,68 +1,18 @@
 <template>
   <div>
+    <!--    面包屑-->
     <Breadcrumb :title="title"/>
+    <!--    新建 搜索-->
     <div class="search">
       <!--      新建项目表单-->
-      <el-button type="primary" round @click="dialogFormVisible = true">新建项目</el-button>
-      <el-dialog title="新建项目"
-                 width="600px"
-                 :visible.sync="dialogFormVisible"
-                 :before-close="handleClose">
-        <el-form :model="form" :rules="rules" ref="form">
-          <el-form-item label="合同编号" :label-width="formLabelWidth" prop="contract_num">
-            <el-input v-model="form.contract_num" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="签订时间" :label-width="formLabelWidth" prop="contract_date">
-            <el-date-picker placeholder="选择日期"
-                            v-model="form.contract_date"
-                            type="date"
-                            style="width: 100%;"
-                            format="yyyy-MM-dd"
-                            value-format="yyyy-MM-dd"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="项目编号" :label-width="formLabelWidth" prop="project_num">
-            <el-input v-model="form.project_num" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="开工时间" :label-width="formLabelWidth" prop="start_date">
-            <el-date-picker placeholder="选择日期"
-                            v-model="form.start_date"
-                            type="date"
-                            style="width: 100%;"
-                            format="yyyy-MM-dd"
-                            value-format="yyyy-MM-dd"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="区域" :label-width="formLabelWidth" prop="area">
-            <el-input v-model="form.area" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="合同名称" :label-width="formLabelWidth" prop="contract_name">
-            <el-input v-model="form.contract_name" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="客户名称" :label-width="formLabelWidth" prop="custom">
-            <el-input v-model="form.custom" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="结束时间" :label-width="formLabelWidth" prop="end_date">
-            <el-date-picker placeholder="选择日期"
-                            v-model="form.end_date"
-                            type="date"
-                            style="width: 100%;"
-                            format="yyyy-MM-dd"
-                            value-format="yyyy-MM-dd"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="电信合同编号" :label-width="formLabelWidth" prop="tele_contract_num">
-            <el-input v-model="form.tele_contract_num" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="总金额" :label-width="formLabelWidth" prop="total_sum">
-            <el-input v-model.number="form.total_sum" type="number" min="0" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button round @click="dialogFormVisible = false">取 消</el-button>
-          <el-button round type="primary" @click="postData('form')">确 定</el-button>
-        </div>
-      </el-dialog>
+      <el-button type="primary" round @click="handleCreate">新建项目</el-button>
+      <ProjectForm :dialogFormVisible="dialogFormVisible"
+                   :dialogTitle="dialogTitle"
+                   :dialogData="dialogData"
+                   :tableIndex="tableIndex"
+                   @dialogVisible="dialogVisible"
+                   @pushData="pushData"
+                   @updateData="updateData"/>
       <!--      搜索框-->
       <form>
         <div class="form-input">
@@ -72,14 +22,14 @@
       </form>
     </div>
     <!--    表格数据-->
-    <div class="table" style="border-radius: 20px">
+    <div class="table">
       <el-table
         v-loading="dataLoading"
         :data="tableData"
         :cell-style="{background: 'var(--light)'}"
         :header-cell-style="{background: 'var(--blue)', color: 'var(--light)'}"
-        style="width: 100%
-        ">
+        style="width: 100%; border-radius: 20px"
+        >
         <el-table-column
           prop="id"
           label="ID"
@@ -122,20 +72,20 @@
           label="电信合同编号">
         </el-table-column>
         <el-table-column
-          prop="total_sum"
+          prop="amount"
           label="总金额">
         </el-table-column>
         <el-table-column label="操作"
                          width="150">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini"
+                       round
+                       @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
 
-            <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini"
+                       round
+                       type="danger"
+                       @click="handleDelete(scope.$index, scope.row)">删除</el-button>
 
           </template>
         </el-table-column>
@@ -148,6 +98,7 @@
 <script>
 import Pagination from '@/components/Pagination'
 import Breadcrumb from '@/components/Breadcrumb'
+import ProjectForm from './components/ProjectForm'
 
 export default {
   name: 'Contract',
@@ -156,63 +107,41 @@ export default {
       title: '项目管理',
       searchData: '',
       tableData: [],
-      dialogFormVisible: false,
       dataLoading: false,
-      form: {
-        contract_num: '',
-        contract_date: '',
-        project_num: '',
-        start_date: '',
-        area: '',
-        contract_name: '',
-        custom: '',
-        end_date: '',
-        tele_contract_num: '',
-        total_sum: ''
-      },
-      formLabelWidth: '120px',
+      dialogFormVisible: false,
+      dialogTitle: '',
+      dialogData: {},
+      tableIndex: -1,
       pagination: {
         total: 0
-      },
-      rules: {
-        contract_num: [
-          { required: true, message: '请输入合同编号', trigger: 'blur' }
-        ],
-        contract_date: [
-          { required: true, message: '请选择时间', trigger: 'blur' }
-        ],
-        project_num: [
-          { required: true, message: '请输入项目编号', trigger: 'blur' }
-        ],
-        start_date: [
-          { required: true, message: '请选择时间', trigger: 'blur' }
-        ],
-        area: [
-          { required: true, message: '请输入所属区域', trigger: 'blur' }
-        ],
-        contract_name: [
-          { required: true, message: '请输入合同名称', trigger: 'blur' }
-        ],
-        custom: [
-          { required: true, message: '请输入客户名称', trigger: 'blur' }
-        ],
-        end_date: [
-          { required: true, message: '请选择时间', trigger: 'blur' }
-        ],
-        tele_contract_num: [
-          { max: 32, message: '长度大于 32 个字符', trigger: 'blur' }
-        ],
-        total_sum: [
-          { required: true, message: '请输入总金额', trigger: 'blur' }
-        ]
       }
     }
   },
   components: {
+    ProjectForm,
     Pagination,
     Breadcrumb
   },
   methods: {
+    // 更改 dialogFormVisible
+    dialogVisible () {
+      this.dialogFormVisible = false
+      this.dialogTitle = '新建项目'
+    },
+    // 后端返回数据插入表格
+    pushData (data) {
+      this.tableData.push(data)
+    },
+    //
+    updateData (data, index) {
+      this.tableData.splice(index, 1, data)
+    },
+    // 新建项目
+    handleCreate () {
+      this.dialogTitle = '新建项目'
+      this.dialogFormVisible = true
+      this.dialogData = {}
+    },
     // 搜索
     handleSearch () {
       this.$request
@@ -237,12 +166,14 @@ export default {
     },
     // 编辑
     handleEdit (index, row) {
-      console.log(index, row.id)
+      console.log('index', index)
+      this.dialogTitle = '编辑项目'
+      this.dialogFormVisible = true
       this.$request
         .get('/contract/' + row.id)
         .then((res) => {
-          console.log(res)
-          console.log('success', this.tableData)
+          this.dialogData = res.data
+          this.tableIndex = index
         })
         .catch((e) => {
           console.log('fail', e)
@@ -253,7 +184,8 @@ export default {
       this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        roundButton: true
       }).then(() => {
         this.tableData.splice(index, 1)
         this.pagination.total = this.tableData.length
@@ -272,47 +204,17 @@ export default {
           message: '已取消删除'
         })
       })
-    },
-    handleClose (done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
-    },
-    // 发送数据
-    postData (formName) {
-      // 发送前校验数据
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          console.log('success submit form')
-          this.$request
-            .post('/contract/create/', {
-              ...this.form
-            })
-            .then((res) => {
-              this.dialogFormVisible = false
-              this.$message({
-                type: 'success',
-                message: '创建成功!'
-              })
-              this.tableData.push(res.data)
-            })
-            .catch((e) => {
-              console.log(e)
-            })
-        } else {
-          console.log('error submit')
-          return false
-        }
-      })
     }
   },
   mounted () {
     // 获取数据
     this.dataLoading = true
     this.$request
-      .get('/contract')
+      .get('/contract', {
+        headers: {
+          Authorization: 'Bearer ' + sessionStorage.access
+        }
+      })
       .then((res) => {
         this.tableData = res.data
         this.pagination.total = res.data.length
