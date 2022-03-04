@@ -2,7 +2,7 @@ from django.http import Http404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView, Response
 from rest_framework.generics import CreateAPIView
-from rest_framework import status, generics
+from rest_framework import status, generics, permissions
 from .serializers import ContractSerializers
 from .models import Contract
 from django.db.models import Q
@@ -17,6 +17,7 @@ import time
 
 # 合同列表
 class ContractList(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
     # 所有合同
     queryset = Contract.objects.all()
 
@@ -44,6 +45,14 @@ class ContractDetail(APIView):
         contract = self.get_object(pk)
         serializer = ContractSerializers(contract)
         return Response(serializer.data)
+
+    def put(self, request, pk):
+        contract = self.get_object(pk)
+        serializer = ContractSerializers(contract, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
         contract = self.get_object(pk)

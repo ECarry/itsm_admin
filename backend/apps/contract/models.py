@@ -11,4 +11,4 @@ class Contract(models.Model):
     custom = models.CharField(max_length=128, verbose_name="客户名称")
     end_date = models.DateField(verbose_name="结束日期")
     tele_contract_num = models.CharField(max_length=32, blank=True, verbose_name="电信合同编码")
-    total_sum = models.FloatField(verbose_name="总金额")
+    amount = models.FloatField(verbose_name="总金额")

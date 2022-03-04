@@ -34,7 +34,7 @@ class VerifyUsernameCount(APIView):
             'count': count
         }
 
-        return Response(data)
+        return Response(data)#
 
 
 # 自定义令牌
