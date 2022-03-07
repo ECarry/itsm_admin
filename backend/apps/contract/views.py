@@ -62,13 +62,33 @@ class ContractDetail(APIView):
 
 # 合同搜索
 class ContractSearch(APIView):
-    def get(self, request, string):
-        contracts = Contract.objects.filter(Q(area__contains=string) | Q(project_num__contains=string)
-                                            | Q(custom__contains=string))
+    def get(self, request, label, value):
+        if label == 'projectNum':
+            contracts = Contract.objects.filter(project_num__icontains=value)
 
-        if contracts.count() == 0:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            if contracts.count() == 0:
+                return Response(status=status.HTTP_404_NOT_FOUND)
 
-        serializers = ContractSerializers(contracts, many=True)
+            serializers = ContractSerializers(contracts, many=True)
 
-        return Response(serializers.data)
+            return Response(serializers.data)
+
+        elif label == 'custom':
+            contracts = Contract.objects.filter(custom__icontains=value)
+
+            if contracts.count() == 0:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serializers = ContractSerializers(contracts, many=True)
+
+            return Response(serializers.data)
+
+        elif label == 'area':
+            contracts = Contract.objects.filter(area__icontains=value)
+
+            if contracts.count() == 0:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serializers = ContractSerializers(contracts, many=True)
+
+            return Response(serializers.data)
