@@ -3,7 +3,7 @@
              width="600px"
              :visible.sync="dialogFormVisible"
              :before-close="handleClose">
-    <el-form :model="form" :rules="rules" ref="form">
+    <el-form :model="form" :rules="rules" ref="form" status-icon>
       <el-form-item label="合同编号" :label-width="formLabelWidth" prop="contract_num">
         <el-input v-model="form.contract_num" autocomplete="off"></el-input>
       </el-form-item>

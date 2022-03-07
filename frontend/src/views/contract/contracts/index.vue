@@ -5,7 +5,7 @@
     <!--    新建 搜索-->
     <div class="search">
       <!--      新建项目表单-->
-      <el-button type="primary" round @click="handleCreate">新建项目</el-button>
+      <el-button type="primary" round @click="handleCreate" style="margin-right: 10px">新建项目</el-button>
       <ProjectForm :dialogFormVisible="dialogFormVisible"
                    :dialogTitle="dialogTitle"
                    :dialogData="dialogData"
@@ -14,12 +14,13 @@
                    @pushData="pushData"
                    @updateData="updateData"/>
       <!--      搜索框-->
-      <form>
-        <div class="form-input">
-          <input type="search" v-model="searchData" placeholder="请输入区域 项目编号 客户名称查询...">
-          <button @click="handleSearch" type="submit" class="search-btn"><i class='el-icon-search' ></i></button>
-        </div>
-      </form>
+<!--      <form>-->
+<!--        <div class="form-input">-->
+<!--          <input type="search" v-model="searchData" placeholder="请输入区域 项目编号 客户名称查询...">-->
+<!--          <button @click="handleSearch" type="submit" class="search-btn"><i class='el-icon-search' ></i></button>-->
+<!--        </div>-->
+<!--      </form>-->
+      <SearchInput :SearchForm="SearchForm" @search="search"/>
     </div>
     <!--    表格数据-->
     <div class="table">
@@ -99,13 +100,13 @@
 import Pagination from '@/components/Pagination'
 import Breadcrumb from '@/components/Breadcrumb'
 import ProjectForm from './components/ProjectForm'
+import SearchInput from '@/components/SearchInput'
 
 export default {
   name: 'Contract',
   data () {
     return {
       title: '项目管理',
-      searchData: '',
       tableData: [],
       dataLoading: false,
       dialogFormVisible: false,
@@ -114,13 +115,28 @@ export default {
       tableIndex: -1,
       pagination: {
         total: 0
+      },
+      SearchForm: {
+        search1: {
+          label: '项目编号',
+          value: 'projectNum'
+        },
+        search2: {
+          label: '客户',
+          value: 'custom'
+        },
+        search3: {
+          label: '区域',
+          value: 'area'
+        }
       }
     }
   },
   components: {
     ProjectForm,
     Pagination,
-    Breadcrumb
+    Breadcrumb,
+    SearchInput
   },
   methods: {
     // 更改 dialogFormVisible
@@ -143,26 +159,31 @@ export default {
       this.dialogData = {}
     },
     // 搜索
-    handleSearch () {
-      this.$request
-        .get('/contract/' + this.searchData)
-        .then((res) => {
-          console.log(res)
-          this.tableData = res.data
-          this.$message({
-            type: 'success',
-            message: '共找到' + res.data.length + '数据'
+    search (label, value) {
+      if (label && value) {
+        this.$request
+          .get('/contract/' + label + '/' + value)
+          .then((res) => {
+            console.log(res)
+            this.tableData = res.data
+            this.$message({
+              type: 'success',
+              message: '共找到' + res.data.length + '数据'
+            })
           })
-          this.searchData = ''
-        })
-        .catch((e) => {
-          console.log(e)
-          this.$message({
-            type: 'warning',
-            message: '未找到数据'
+          .catch((e) => {
+            console.log(e)
+            this.$message({
+              type: 'warning',
+              message: '未找到数据'
+            })
           })
-          this.searchData = ''
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '请输入搜索内容'
         })
+      }
     },
     // 编辑
     handleEdit (index, row) {
@@ -204,27 +225,32 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    // 获取数据
+    getData () {
+      this.dataLoading = true
+      this.$request
+        .get('/contract', {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.access
+          }
+        })
+        .then((res) => {
+          this.tableData = res.data
+          this.pagination.total = res.data.length
+        })
+        .catch((e) => {
+          console.log(e)
+          this.$router.push('/login')
+        })
+        .finally(() => {
+          this.dataLoading = false
+        })
     }
   },
   mounted () {
     // 获取数据
-    this.dataLoading = true
-    this.$request
-      .get('/contract', {
-        headers: {
-          Authorization: 'Bearer ' + sessionStorage.access
-        }
-      })
-      .then((res) => {
-        this.tableData = res.data
-        this.pagination.total = res.data.length
-      })
-      .catch((e) => {
-        console.log(e)
-      })
-      .finally(() => {
-        this.dataLoading = false
-      })
+    this.getData()
   }
 }
 </script>
