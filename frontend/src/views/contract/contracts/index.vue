@@ -230,11 +230,7 @@ export default {
     getData () {
       this.dataLoading = true
       this.$request
-        .get('/contract', {
-          headers: {
-            Authorization: 'Bearer ' + localStorage.access
-          }
-        })
+        .get('/contract')
         .then((res) => {
           this.tableData = res.data
           this.pagination.total = res.data.length

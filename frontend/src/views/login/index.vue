@@ -95,8 +95,6 @@ export default {
                 // 记住我，将返回的数据写入浏览器中的 localstorage
                 localStorage.access = response.data.access
                 localStorage.username = response.data.username
-                sessionStorage.access = response.data.access
-                sessionStorage.usernmae = response.data.username
                 this.$router.push('/user')
               } else {
                 // 没记住，则写入 sessionStorage
@@ -105,9 +103,18 @@ export default {
                 sessionStorage.usernmae = response.data.username
                 this.$router.push('/user')
               }
+              this.$message({
+                type: 'success',
+                message: '登录成功!'
+              }
+              )
             })
             .catch((error) => {
               console.log(error.response.data)
+              this.$message({
+                type: 'error',
+                message: '密码错误!'
+              })
             })
         } else {
           console.log('error submit!')

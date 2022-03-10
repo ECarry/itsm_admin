@@ -71,13 +71,8 @@ export default {
   mounted () {
     // 获取用户数据
     this.$request
-      .get('/user/detail/', {
-        headers: {
-          Authorization: 'Bearer ' + sessionStorage.access
-        }
-      })
+      .get('/user/detail/')
       .then((response) => {
-        console.log(response.data)
         this.userInfo = { ...response.data }
       })
   }
