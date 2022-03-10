@@ -32,6 +32,11 @@ export default {
   methods: {
     search () {
       this.$emit('search', this.selectValue, this.searchValue)
+    },
+    resetSearchForm () {
+      this.$emit('resetSearchForm')
+      this.searchValue = ''
+      this.selectValue = ''
     }
   }
 }

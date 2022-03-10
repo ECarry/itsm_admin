@@ -13,14 +13,8 @@
                    @dialogVisible="dialogVisible"
                    @pushData="pushData"
                    @updateData="updateData"/>
-      <!--      搜索框-->
-<!--      <form>-->
-<!--        <div class="form-input">-->
-<!--          <input type="search" v-model="searchData" placeholder="请输入区域 项目编号 客户名称查询...">-->
-<!--          <button @click="handleSearch" type="submit" class="search-btn"><i class='el-icon-search' ></i></button>-->
-<!--        </div>-->
-<!--      </form>-->
-      <SearchInput :SearchForm="SearchForm" @search="search"/>
+      <SearchInput :SearchForm="SearchForm" @search="search" ref="searchForm"/>
+      <el-button type="info" round plain @click="resetSearchForm" style="margin-left: 10px">重置</el-button>
     </div>
     <!--    表格数据-->
     <div class="table">
@@ -164,7 +158,6 @@ export default {
         this.$request
           .get('/contract/' + label + '/' + value)
           .then((res) => {
-            console.log(res)
             this.tableData = res.data
             this.$message({
               type: 'success',
@@ -181,9 +174,15 @@ export default {
       } else {
         this.$message({
           type: 'warning',
-          message: '请输入搜索内容'
+          message: '请选择搜索项和输入搜索内容'
         })
       }
+    },
+    // 重置搜索框
+    resetSearchForm () {
+      this.getData()
+      this.$refs.searchForm.searchValue = ''
+      this.$refs.searchForm.selectValue = ''
     },
     // 编辑
     handleEdit (index, row) {
