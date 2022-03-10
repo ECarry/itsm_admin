@@ -16,7 +16,7 @@
         <el-button slot="reference" style="border: none; background: none">
           <a href="#" class="notification">
             <el-badge :value="messages" class="item">
-              <i class="el-icon-message-solid"></i>
+              <i style="color: var(--blue)" class="el-icon-message-solid"></i>
             </el-badge>
           </a>
         </el-button>
