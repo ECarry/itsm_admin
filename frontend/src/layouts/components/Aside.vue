@@ -10,7 +10,7 @@
    <div class="menu">
      <!--   TOP MENU-->
      <ul class="menu top">
-       <li @click="changeActive(1)" :class="{ active: isActive === 1 }">
+       <li >
          <router-link to="/">
            <a href="#">
              <i class="el-icon-menu"></i>
@@ -18,13 +18,13 @@
            </a>
          </router-link>
        </li>
-       <li @click="changeActive(2)" :class="{ active: isActive === 2 }">
+       <li >
          <a href="#">
            <i class="el-icon-goods"></i>
            <span>采购管理</span>
          </a>
        </li>
-       <li @click="changeActive(3)" :class="{ active: isActive === 3 }">
+       <li >
          <router-link to="/contract">
            <a href="#">
              <i class="el-icon-s-order"></i>
@@ -32,7 +32,7 @@
            </a>
          </router-link>
        </li>
-       <li @click="changeActive(4)" :class="{ active: isActive === 4 }">
+       <li >
          <router-link to="/server">
            <a href="#">
              <i class="el-icon-s-platform"></i>
@@ -40,7 +40,7 @@
            </a>
          </router-link>
        </li>
-       <li @click="changeActive(5)" :class="{ active: isActive === 5 }">
+       <li >
          <router-link to="/spare">
            <a href="#">
              <i class="el-icon-cpu"></i>
@@ -48,7 +48,7 @@
            </a>
          </router-link>
        </li>
-       <li @click="changeActive(6)" :class="{ active: isActive === 6 }">
+       <li >
          <router-link to="/user">
            <a href="#">
              <i class="el-icon-s-custom"></i>
@@ -84,14 +84,9 @@ export default {
     return {
       isActive: ''
     }
-  },
-  methods: {
-    changeActive (i) {
-      this.isActive = i
-    }
   }
 }
 </script>
-<style>
+<style scoped>
 
 </style>

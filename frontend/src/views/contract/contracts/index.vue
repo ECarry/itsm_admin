@@ -152,7 +152,7 @@ export default {
       this.dialogFormVisible = true
       this.dialogData = {}
     },
-    // 搜索
+    // 搜索,使用 自定义事件
     search (label, value) {
       if (label && value) {
         this.$request
@@ -178,7 +178,7 @@ export default {
         })
       }
     },
-    // 重置搜索框
+    // 重置搜索框,使用 ref
     resetSearchForm () {
       this.getData()
       this.$refs.searchForm.searchValue = ''
@@ -246,6 +246,7 @@ export default {
   mounted () {
     // 获取数据
     this.getData()
+    console.log(this.$router)
   }
 }
 </script>

@@ -1,8 +1,5 @@
 <template>
-  <div class="signup-container">
     <div class="signup-form">
-      <div class="title-container">SignUp</div>
-
       <div class="form-input">
         <el-form
           :model="ruleForm"
@@ -38,15 +35,9 @@
             ><el-button @click="handleSendVerifyCode">获取验证码</el-button>
           </el-form-item>
 
-          <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')"
-              >注册</el-button
-            >
-          </el-form-item>
         </el-form>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -55,7 +46,7 @@ import axios from 'axios'
 export default {
   name: 'SignUp',
   data () {
-    var validateUsername = (rule, value, callback) => {
+    const validateUsername = (rule, value, callback) => {
       if (!value) {
         callback(new Error('请输入用户名'))
       } else if (value) {
@@ -71,7 +62,7 @@ export default {
       }
     }
 
-    var validatePass = (rule, value, callback) => {
+    const validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'))
       } else {
@@ -80,7 +71,7 @@ export default {
       }
     }
 
-    var validatePass2 = (rule, value, callback) => {
+    const validatePass2 = (rule, value, callback) => {
       if (!value) {
         callback(new Error('请再次输入密码'))
       } else if (value !== this.ruleForm.password) {
@@ -91,7 +82,7 @@ export default {
       }
     }
     // 自定义邮箱验证邮箱是否注册
-    var validateEmail = (rule, value, callback) => {
+    const validateEmail = (rule, value, callback) => {
       if (value) {
         axios
           .get('http://127.0.0.1:8000/user/verify/email/' + value, {
@@ -108,7 +99,7 @@ export default {
       }
     }
 
-    var validateVerifyCode = (rule, value, callback) => {
+    const validateVerifyCode = (rule, value, callback) => {
       if (!value) {
         callback(new Error('请输入验证码'))
       } else {
@@ -118,6 +109,7 @@ export default {
     }
 
     return {
+      title: 'Signup',
       ruleForm: {
         username: '',
         email: '',

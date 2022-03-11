@@ -49,8 +49,8 @@
       <el-form-item label="电信合同编号" :label-width="formLabelWidth" prop="tele_contract_num">
         <el-input v-model="form.tele_contract_num" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="总金额" :label-width="formLabelWidth" prop="total_sum">
-        <el-input v-model.number="form.amount" type="number" min="0" autocomplete="off"></el-input>
+      <el-form-item label="总金额" :label-width="formLabelWidth" prop="amount">
+        <el-input v-model.number="form.amount" type="number" min="0"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -95,7 +95,7 @@ export default {
         custom: '',
         end_date: '',
         tele_contract_num: '',
-        amount: 111231314
+        amount: ''
       },
       formLabelWidth: '120px',
       rules: {
@@ -151,7 +151,6 @@ export default {
         if (valid) {
           // 判断新建或者修改
           if (this.dialogTitle === '新建项目') {
-            console.log('新建了项目---------')
             // 新建使用 post
             this.$request
               .post('/contract/create/', {
@@ -169,7 +168,6 @@ export default {
                 console.log(e)
               })
           } else {
-            console.log('修改了项目---------')
             // 修改使用 put
             this.$request
               .put('/contract/' + this.form.id, {

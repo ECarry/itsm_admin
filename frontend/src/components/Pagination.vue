@@ -1,7 +1,6 @@
 <template>
   <el-pagination
     style="margin-top: 20px; text-align: center"
-    hide-on-single-page
     background
     @size-change="handleSizeChange"
     @current-change="handleCurrentChange"
