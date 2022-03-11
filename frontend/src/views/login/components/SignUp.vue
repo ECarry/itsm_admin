@@ -31,18 +31,20 @@
           </el-form-item>
 
           <el-form-item label="验证码" prop="verifyCode">
-            <el-input v-model="ruleForm.verifyCode"></el-input
-            ><el-button @click="handleSendVerifyCode">获取验证码</el-button>
+            <el-input v-model="ruleForm.verifyCode"></el-input>
+            <el-button @click="handleSendVerifyCode" style="margin-top: 10px">获取验证码</el-button>
           </el-form-item>
-
+          <!--        BUTTON-->
+          <div class="button">
+            <div class="button-content"></div>
+            <button @click="submitForm('ruleForm')">Signup</button>
+          </div>
         </el-form>
       </div>
     </div>
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   name: 'SignUp',
   data () {
@@ -50,7 +52,8 @@ export default {
       if (!value) {
         callback(new Error('请输入用户名'))
       } else if (value) {
-        axios.get('http://127.0.0.1:8000/user/verify/username/' + value, { responseType: 'json' })
+        this.$request
+          .get('/user/verify/username/' + value, { responseType: 'json' })
           .then((response) => {
             if (response.data.count === 1) {
               callback(new Error('用户名已存在'))
@@ -84,8 +87,8 @@ export default {
     // 自定义邮箱验证邮箱是否注册
     const validateEmail = (rule, value, callback) => {
       if (value) {
-        axios
-          .get('http://127.0.0.1:8000/user/verify/email/' + value, {
+        this.$request
+          .get('/user/verify/email/' + value, {
             responseType: 'json'
           })
           .then((response) => {
@@ -147,8 +150,8 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          axios
-            .post('http://127.0.0.1:8000/user/create/', {
+          this.$request
+            .post('/user/create/', {
               username: this.ruleForm.username,
               email: this.ruleForm.email,
               password: this.ruleForm.password,
@@ -173,10 +176,14 @@ export default {
     },
     handleSendVerifyCode () {
       if (!this.ruleForm.email) {
+        this.$message({
+          type: 'error',
+          message: '请输入邮箱!'
+        })
         return false
       }
-      axios
-        .get(`http://127.0.0.1:8000/email/verify/${this.ruleForm.email}`, {
+      this.$request
+        .get('/email/verify/' + this.ruleForm.email, {
           responseType: 'json'
         })
         .then((response) => {
